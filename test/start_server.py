@@ -1,5 +1,6 @@
 from pyo import *
-# from .instruments import RunFm
+# from instruments.instruments import RunKick
+
 
 # You must create and boot a Server before creating any audio object.
 RES = 'off'
@@ -86,18 +87,18 @@ SCALES = [[0, 2, 3, 7, 10], [0, 3, 5, 8, 10], [0, 2, 7, 8, 10]]
 # mainTime = Metro(time=30).play()
 # mainFunc = TrigFunc(mainTime, sectionControl)
 
-barTime = Metro(TM * TAPS).play()
-barCount = Counter(barTime, max=1000)
-eightBarCount = Counter(barTime, max=8)
-changeFreqSelect = Select(eightBarCount)
-startDisto = Select(barCount, value=[50, 90, 154, 210]).mix(1)
-closeDisto = SDelay(startDisto, delay=10.799, maxdelay=11)
+# barTime = Metro(TM * TAPS).play()
+# barCount = Counter(barTime, max=1000)
+# eightBarCount = Counter(barTime, max=8)
+# changeFreqSelect = Select(eightBarCount)
+# startDisto = Select(barCount, value=[50, 90, 154, 210]).mix(1)
+# closeDisto = SDelay(startDisto, delay=10.799, maxdelay=11)
+#
+# countCloseDisto = Counter(closeDisto)
+# startBell = Select(countCloseDisto, 2)
+# bassSwitch = Counter(startBell + Trig().play(), min=0, max=2)
 
-countCloseDisto = Counter(closeDisto)
-startBell = Select(countCloseDisto, 2)
-bassSwitch = Counter(startBell + Trig().play(), min=0, max=2)
-
-ampSwitch = SigTo(value=1, time=60, init=1)
+# ampSwitch = SigTo(value=1, time=60, init=1)
 # invAmpSwitch = SigTo(value=0, time=70, init=0)
 # fmTranspo = Sig(ampSwitch, mul=.75, add=.25)
 # sirenSwitch = SigTo(value=1, time=120, init=1)
@@ -106,7 +107,7 @@ ampSwitch = SigTo(value=1, time=60, init=1)
 
 ### Processes ###
 # rFm = RunFm(TM, TAPS, changeFreqSelect, fmTranspo, countCloseDisto, fmFinalFadeout, bassSwitch, ATTR[RES]['fm'])
-rKick = RunKick(TM, TAPS, BASS_SEQ, changeFreqSelect, ampSwitch, bassSwitch, startDisto + closeDisto)
+# rKick = RunKick(TM, TAPS, BASS_SEQ, changeFreqSelect, ampSwitch, bassSwitch, startDisto + closeDisto)
 # rDisto = RunDisto(rFm.getOutput(), startDisto)
 # rSines = RunHighSines(sirenSwitch, ATTR[RES]['sines'])
 # rBell = RunBell(TM, TAPS, startBell, invAmpSwitch, finalFadeout, ATTR[RES]['bell'])
@@ -136,6 +137,48 @@ rKick = RunKick(TM, TAPS, BASS_SEQ, changeFreqSelect, ampSwitch, bassSwitch, sta
 
 
 # tt = TrigFunc(rFm.getBarEnd(), callback)
+
+# Chord progression: I - II - I - V.
+e2 = Events(
+    degree=EventSeq(
+        [
+            EventSeq([4.00, 4.03, 4.07], 2),
+            EventSeq([4.02, 4.05, 4.08], 2),
+            EventSeq([4.00, 4.03, 4.07], 2),
+            EventSeq([3.11, 4.02, 4.07], 2),
+        ],
+        occurrences=inf,
+    ),
+    beat=1 / 6.0,
+    db=[-6, -12, -12],
+    attack=0.001,
+    decay=0.05,
+    sustain=0.5,
+    release=0.005,
+)
+e2.play()
+e2.stop()
+
+e1 = Events(
+    degree=EventSeq(
+        [
+            EventSeq([4.00, 4.03, 4.07], 2),
+            EventSeq([4.02, 4.05, 4.08], 2),
+            EventSeq([4.00, 4.03, 4.07], 2),
+            EventSeq([3.11, 4.02, 4.07], 2),
+        ],
+        occurrences=inf,
+    ),
+    bpm=60.0,
+    beat=1.0,
+    db=[-6, -12, -12],
+    attack=0.3,
+    decay=0.5,
+    sustain=0.8,
+    release=0.2,
+)
+e1.play()
+e1.stop()
 
 s.start()
 # s.gui(locals())
